@@ -3,24 +3,27 @@
 public class HashTagTokenizer {
 
 	public static void main(String[] args) {
-
 		String hashTag = args[0];
-		String []dictionary = readDictionary("dictionary.txt");
+		String[] dictionary = readDictionary("dictionary.txt");
 		breakHashTag(hashTag, dictionary);
 	}
 
 	public static String[] readDictionary(String fileName) {
 		String[] dictionary = new String[3000];
-
 		In in = new In(fileName);
-
-		// Your code here
-
+		int i = 0;
+		while (!in.isEmpty()) {
+			dictionary[i] = in.readLine();
+			i++;
+		}
 		return dictionary;
 	}
 
-	public static boolean existInDictionary(String word, String []dictionary) {
-		// Your code here
+	public static boolean existInDictionary(String word, String[] dictionary) {
+		for(int i = 0; i < dictionary.length; i++) {
+			if (word.equals(dictionary[i])) return true;
+		}
+		return false;
 	}
 
 	public static void breakHashTag(String hashtag, String[] dictionary) {
@@ -29,12 +32,17 @@ public class HashTagTokenizer {
         if (hashtag.isEmpty()) {
             return;
         }
- 
+		hashtag = hashtag.toLowerCase(); // pre-proccess to small letters
         int N = hashtag.length();
-
         for (int i = 1; i <= N; i++) {
-		
+			String word = hashtag.substring(0, i);
+			if (existInDictionary(word, dictionary)) {
+				hashtag = hashtag.substring(i, N);
+				N = hashtag.length();
+				System.out.println(word);
+				breakHashTag(hashtag, dictionary);
+				break;				
+			}
         }
     }
-
 }
